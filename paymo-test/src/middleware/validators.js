@@ -1,8 +1,3 @@
-/**
- *
- * @param {String} value
- */
-
 export function phoneFormat(value) {
   let res;
   // prevent deleting of 998 prefix
@@ -19,6 +14,13 @@ export function phoneFormat(value) {
   return res;
 }
 
+export function nickname(value) {
+  // 5 and more alfanumeric characters and symbols: "-", "."
+  return /^[\w\-.]{5,}$/g.test(value);
+}
+
 export function password(value) {
-  return value;
+  // 8 and more alfanumeric characters
+  // and symbols: "-", ".", "+", "=", "@", "$", "!", "?"
+  return /^[\w\-.+=@$!?]{8,}$/g.test(value);
 }

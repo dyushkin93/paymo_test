@@ -1,11 +1,7 @@
 <template>
   <div :class="$style.home">
-    <h2>Hello, {{this.$store.getters.FULL_NAME}}!</h2>
-    <router-link
-            :class="$style.link"
-            to="register">
-          Registration
-    </router-link>
+    <h2>Hello, {{ this.$store.getters.FULL_NAME }}!</h2>
+    <router-link :class="$style.link" to="register"> Registration </router-link>
   </div>
 </template>
 
@@ -32,9 +28,9 @@ export default {
   background-position: 50% 100%;
   background-repeat: no-repeat;
   background-size: 0% 1px;
-  opacity: .8;
-  transition: background-size .2s;
-  transition: opacity, .2s;
+  opacity: 0.8;
+  transition: background-size 0.2s;
+  transition: opacity, 0.2s;
   &:hover {
     background-size: 100% 1px;
     opacity: 1;
@@ -45,5 +41,4 @@ h2 {
   margin-top: 0;
   font-size: 1.25em;
 }
-
 </style>
