@@ -1,61 +1,98 @@
 <template>
   <div :class="$style.register">
     <h2>Registration</h2>
-    <form :class="$style.registerForm" @input="handleChange" @blur="handleBlur">
-      <label :class="$style.fullName">
-        <span :class="$style.labelText">Full Name *</span>
-        <input id="fullName" type="text" v-model="fullName.value" required />
+    <form :class="$style.registerForm" @input="handleChange">
+      <label :class="[$style.fullName, fullName.showHint ? $style.wrong : '']">
+        <span :class="$style.labelText"> Full Name * </span>
+        <input
+          id="fullName"
+          type="text"
+          v-model="fullName.value"
+          v-on:blur="handleBlur"
+          required
+        />
       </label>
-      <label :class="$style.nickname">
+
+      <label :class="[$style.nickname, nickname.showHint ? $style.wrong : '']">
         <span :class="$style.labelText">Nickname *</span>
-        <input id="nickname" type="text" v-model="nickname.value" required />
+        <input
+          id="nickname"
+          type="text"
+          v-model="nickname.value"
+          v-on:blur="handleBlur"
+          required
+        />
       </label>
-      <label :class="$style.password">
+
+      <label :class="[$style.password, password.showHint ? $style.wrong : '']">
         <span :class="$style.labelText">Password *</span>
         <input
           id="password"
           type="password"
           v-model="password.value"
+          v-on:blur="handleBlur"
           required
         />
       </label>
-      <label :class="$style.passwordRepeat">
+
+      <label
+        :class="[
+          $style.passwordRepeat,
+          passwordRepeat.showHint ? $style.wrong : '',
+        ]"
+      >
         <span :class="$style.labelText">Repeat Password *</span>
         <input
           id="passwordRepeat"
           type="password"
           v-model="passwordRepeat.value"
+          v-on:blur="handleBlur"
           required
         />
       </label>
-      <label :class="$style.phone">
+
+      <label :class="[$style.phone, phone.showHint ? $style.wrong : '']">
         <span :class="$style.labelText">Phone *</span>
-        <input id="phone" type="text" :value="phone.number" required />
+        <input
+          id="phone"
+          type="text"
+          :value="phone.number"
+          v-on:blur="handleBlur"
+          required
+        />
       </label>
+
       <label :class="$style.country">
         <span :class="$style.labelText">Country</span>
         <input id="country" type="text" v-model="country" />
       </label>
+
       <label :class="$style.city">
         <span :class="$style.labelText">City</span>
         <input id="city" type="text" v-model="city" />
       </label>
-      <!-- <label :class="$style.gender">
-        <span :class="$style.labelText">Gender</span>
-        <input id="gender" type="text" v-model="gender">
-      </label> -->
+
       <select id="gender" :class="$style.gender" v-model="gender">
         <option value="none">Gender</option>
         <option value="MALE">Male</option>
         <option value="FEMALE">Female</option>
       </select>
+
       <p :class="$style.requiredFields">* - required fields</p>
-      <input :class="$style.submit" type="submit" value="continue" disabled />
+
+      <input
+        :class="[$style.submit, isFormValid ? $style.submitActive : '']"
+        type="submit"
+        value="continue"
+        disabled
+      />
     </form>
   </div>
 </template>
 
 <script>
+/* eslint-disable operator-linebreak */
+// https://github.com/prettier/prettier/issues/3806 due to this issue
 import * as Validators from '../middleware/validators';
 
 export default {
@@ -84,14 +121,18 @@ export default {
       },
       phone: {
         number: '998 ',
+        isValid: false,
+        showHint: false,
       },
       gender: 'none',
       country: '',
       city: '',
+      isFormValid: false,
     };
   },
   methods: {
     handleChange(event) {
+      console.log('asd');
       let { value } = event.target;
       const fieldID = event.target.id;
 
@@ -100,9 +141,14 @@ export default {
       }
 
       switch (fieldID) {
+        case 'fullName':
+          this.fullName.isValid = value.length > 0;
+          break;
+
         case 'phone':
           value = Validators.phoneFormat(value);
           this.phone = value ? { number: value } : { number: this.phone.number };
+          this.phone.isValid = value.length === 13;
           break;
 
         case 'nickname':
@@ -112,6 +158,7 @@ export default {
 
         case 'password':
           this.password.isValid = Validators.password(value);
+          this.passwordRepeat.isValid = this.password.value === this.passwordRepeat.value;
           console.log(this.password.isValid);
           break;
         case 'passwordRepeat':
@@ -121,12 +168,22 @@ export default {
         default:
           break;
       }
+
+      this.isFormValid =
+        this.passwordRepeat.isValid &&
+        this.password.isValid &&
+        this.nickname.isValid &&
+        this.fullName.isValid &&
+        this.phone.isValid;
     },
 
     handleBlur(event) {
       const data = this[event.target.id];
       if (data.showHint !== undefined) {
-        data.showHint = data.isValid;
+        data.showHint = !data.isValid;
+        if (event.target.id === 'password') {
+          this.passwordRepeat.showHint = !this.passwordRepeat.isValid;
+        }
       }
     },
   },
@@ -221,5 +278,9 @@ input {
     box-shadow: 0px 0.3px 0.5px rgba(0, 0, 0, 0.1),
       0px 2px 4px rgba(0, 0, 0, 0.2);
   }
+}
+
+.wrong {
+  border-color: red;
 }
 </style>
