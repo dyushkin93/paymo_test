@@ -19,11 +19,6 @@ export default {
 <style lang="scss" scoped module>
 .home {
   @include material-card;
-  position: absolute;
-  left: 50%;
-  top: 30%;
-  transform: translate(-50%, -50%);
-  padding: 1em;
 }
 
 .link {
@@ -33,12 +28,21 @@ export default {
   font-weight: 700;
   color: $color-primary;
   cursor: pointer;
+  background-image: linear-gradient($color-primary, $color-primary);
+  background-position: 50% 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  opacity: .8;
+  transition: background-size .2s;
+  transition: opacity, .2s;
   &:hover {
-
+    background-size: 100% 1px;
+    opacity: 1;
   }
 }
 
 h2 {
+  margin-top: 0;
   font-size: 1.25em;
 }
 
