@@ -1,0 +1,107 @@
+<div v-if="registrationId" :class="$style.wrapper">
+  <h2>Verification</h2>
+  <label :class="$style.verifyCode">
+    <span :class="$style.labelText">Verification code, 6 digits</span>
+    <input
+      @input="handleVerify"
+      id="verifyCode"
+      type="text"
+      :value="verificationCode.value"
+      maxlength="6"
+      required
+    />
+  </label>
+</div>
+<div v-else :class="$style.wrapper">
+  <h2>Registration</h2>
+  <form
+    :class="$style.registerForm"
+    @input="handleChange"
+    v-on:submit="handleSubmit"
+  >
+    <label :class="[$style.fullName, fullName.showHint ? $style.wrong : '']">
+      <span :class="$style.labelText"> Full Name * </span>
+      <input
+        id="fullName"
+        type="text"
+        v-model="fullName.value"
+        v-on:blur="handleBlur"
+        required
+      />
+    </label>
+
+    <label :class="[$style.nickname, nickname.showHint ? $style.wrong : '']">
+      <span :class="$style.labelText">Nickname *</span>
+      <input
+        id="nickname"
+        type="text"
+        v-model="nickname.value"
+        v-on:blur="handleBlur"
+        required
+      />
+    </label>
+
+    <label :class="[$style.password, password.showHint ? $style.wrong : '']">
+      <span :class="$style.labelText">Password *</span>
+      <input
+        id="password"
+        type="password"
+        v-model="password.value"
+        v-on:blur="handleBlur"
+        required
+      />
+    </label>
+
+    <label
+      :class="[
+        $style.repeatPassword,
+        repeatPassword.showHint ? $style.wrong : '',
+      ]"
+    >
+      <span :class="$style.labelText">Repeat Password *</span>
+      <input
+        id="repeatPassword"
+        type="password"
+        v-model="repeatPassword.value"
+        v-on:blur="handleBlur"
+        required
+      />
+    </label>
+
+    <label :class="[$style.phone, phone.showHint ? $style.wrong : '']">
+      <span :class="$style.labelText">Phone *</span>
+      <input
+        id="phone"
+        type="text"
+        :value="phone.value"
+        v-on:blur="handleBlur"
+        required
+      />
+    </label>
+
+    <label :class="$style.country">
+      <span :class="$style.labelText">Country</span>
+      <input id="country" type="text" v-model="country" />
+    </label>
+
+    <label :class="$style.city">
+      <span :class="$style.labelText">City</span>
+      <input id="city" type="text" v-model="city" />
+    </label>
+
+    <select id="gender" :class="$style.gender" v-model="gender">
+      <option value="none">Gender</option>
+      <option value="MALE">Male</option>
+      <option value="FEMALE">Female</option>
+    </select>
+
+    <p :class="$style.requiredFields">* - required fields</p>
+
+    <input
+      :class="[$style.submit, isFormValid ? $style.submitActive : '']"
+      :disabled="!isFormValid"
+      type="submit"
+      value="continue"
+    />
+  </form>
+</div>
