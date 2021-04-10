@@ -1,5 +1,19 @@
 <template>
-  <div :class="$style.register">
+  <div v-if="registrationId" :class="$style.wrapper">
+    <h2>Verification</h2>
+    <label :class="$style.verifyCode">
+      <span :class="$style.labelText">Verification code, 6 digits</span>
+      <input
+        @input="handleVerify"
+        id="verifyCode"
+        type="text"
+        :value="verificationCode.value"
+        maxlength="6"
+        required
+      />
+    </label>
+  </div>
+  <div v-else :class="$style.wrapper">
     <h2>Registration</h2>
     <form
       :class="$style.registerForm"
@@ -131,7 +145,10 @@ export default {
       gender: 'none',
       country: '',
       city: '',
-      verificationCode: '',
+      verificationCode: {
+        value: '',
+        isValid: false,
+      },
       registrationId: null,
     };
   },
@@ -152,7 +169,6 @@ export default {
         case 'phone':
           value = Validators.phoneFormat(value);
           this.phone = value ? { value } : { value: this.phone.value };
-          console.log('phone');
           this.phone.isValid = this.phone.value.length === 13;
           break;
 
@@ -186,8 +202,6 @@ export default {
     handleSubmit(event) {
       event.preventDefault();
       const URL = 'http://test.ok.paymo.uz/public/user/register';
-      console.log(this.fullName.value);
-
       const body = {
         fullName: this.fullName.value,
         nickname: this.nickname.value,
@@ -198,8 +212,6 @@ export default {
         country: this.country.toUpperCase(),
         city: this.city.toUpperCase(),
       };
-
-      console.log(JSON.stringify(body));
 
       const config = {
         method: 'POST',
@@ -226,6 +238,37 @@ export default {
           console.log(error);
         });
     },
+
+    handleVerify(event) {
+      const { value } = event.target;
+      if (Validators.verifyCode(value)) {
+        this.verificationCode.value = value;
+      } else {
+        this.verificationCode = { value: this.verificationCode.value };
+      }
+
+      if (this.verificationCode.value.length === 6) {
+        this.submitVerify();
+      }
+    },
+
+    submitVerify() {
+      const URL = `http://test.ok.paymo.uz/public/user/confirm-registration/${this.registrationId}`;
+
+      const body = {
+        otp: +this.verificationCode.value,
+      };
+
+      const config = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      };
+
+      this.$store.dispatch('SET_USER', { URL, config });
+    },
   },
 
   computed: {
@@ -243,10 +286,15 @@ export default {
 </script>
 
 <style lang="scss" scoped module>
-.register {
+.wrapper {
   @include material-card;
   top: 50%;
   max-width: 550px;
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.25em;
+    font-size: 1.25em;
+  }
 }
 
 .registerForm {
@@ -255,10 +303,10 @@ export default {
   justify-content: space-between;
 }
 
-h2 {
-  margin-top: 0;
-  margin-bottom: 1.25em;
-  font-size: 1.25em;
+.verifyCode {
+  input {
+    letter-spacing: 0.2em;
+  }
 }
 
 label,

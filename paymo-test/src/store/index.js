@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import router from '../router';
 
 Vue.use(Vuex);
 
@@ -17,16 +18,18 @@ const store = new Vuex.Store({
       state.user = payload;
     },
   },
-  actions: {},
+  actions: {
+    SET_USER: async (context, payload) => {
+      try {
+        const res = await fetch(payload.URL, payload.config);
+        const data = await res.json();
+        context.commit('SET_USER', data);
+        router.push('/');
+      } catch (error) {
+        router.push('/error');
+      }
+    },
+  },
 });
 
 export default store;
-
-// "fullName": “My Full Name”,
-//     "nickname": “my.nick-name”,
-//     "password": “my_strong_p@ssword”,
-//     "repeatPassword": "my_strong_p@ssword",
-//     "phone": “998998887766”,
-//     “gender”: “MALE”,
-//     “country”: “RUSSIA”,
-//     “city”: “MOSCOW”

@@ -24,3 +24,7 @@ export function password(value) {
   // and at leat one of the symbols: "-", ".", "+", "=", "@", "$", "!", "?"
   return /(?=.*[_\-.+=@$!?])[\w\-.+=@$!?]{8,}/g.test(value);
 }
+
+export function verifyCode(value) {
+  return /^[\d]*$/g.test(value);
+}
