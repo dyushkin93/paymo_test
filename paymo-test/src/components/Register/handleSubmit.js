@@ -36,7 +36,7 @@ export default function handleSubmit(event) {
     .then((data) => {
       this.registrationId = data.registrationId;
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(() => {
+      this.$route.push('/');
     });
 }
