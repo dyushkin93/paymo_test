@@ -1,0 +1,40 @@
+$color-primary: #6200e8;
+$color-primary-s: #782ee0;
+$color-dark: rgba(0, 0, 0, 0.87);
+$color-dark-s: rgba(0, 0, 0, 0.6);
+$color-red: #b00020;
+$color-disabled: #979797;
+$color-background: #ffffff;
+
+$font-primary: Avenir, Helvetica, Arial, sans-serif;
+
+@mixin material-card {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+  padding: 1em;
+  box-shadow: 0px 0.1px 0.3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+@mixin link {
+  padding: 0.3em 0;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: 700;
+  color: $color-primary;
+  cursor: pointer;
+  background-image: linear-gradient($color-primary, $color-primary);
+  background-position: 50% 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  opacity: 0.8;
+  transition: background-size 0.2s;
+  transition: opacity, 0.2s;
+  &:hover {
+    background-size: 100% 1px;
+    opacity: 1;
+  }
+}

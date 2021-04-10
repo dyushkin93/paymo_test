@@ -1,0 +1,162 @@
+.wrapper {
+  @include material-card;
+  top: 50%;
+  max-width: 550px;
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.25em;
+    font-size: 1.25em;
+  }
+}
+
+.registerForm {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.verifyCode {
+  input {
+    letter-spacing: 0.2em;
+  }
+}
+
+label,
+.gender {
+  position: relative;
+  flex: 0 0 49%;
+  display: block;
+  box-sizing: border-box;
+  margin-bottom: 1em;
+  padding: 0.5em 1em;
+  border: 1px solid rgba(0, 0, 0, 0.38);
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.labelText {
+  position: absolute;
+  top: 0;
+  left: 1em;
+  transform: translateY(-50%);
+  padding: 0 0.5em;
+  font-size: 0.75em;
+  background-color: $color-background;
+  color: $color-dark-s;
+}
+
+input {
+  font-size: 1em;
+  border: none;
+  font-family: $font-primary;
+  &:focus {
+    outline: none;
+  }
+}
+
+.gender {
+  &:focus {
+    outline: none;
+  }
+}
+
+.requiredFields {
+  margin-top: 0;
+  margin-bottom: 1em;
+  flex: 0 0 100%;
+  font-size: 0.75em;
+  color: $color-dark-s;
+}
+
+.submit {
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  background-color: $color-disabled;
+  font-size: 0.875em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: $color-background;
+  transition: background, transform, 0.15s;
+}
+
+.submitActive {
+  background-color: $color-primary;
+  cursor: pointer;
+  &:hover {
+    background-color: $color-primary-s;
+  }
+  &:active {
+    transform: translate(-1px, -1px);
+    box-shadow: 0px 0.3px 0.5px rgba(0, 0, 0, 0.1),
+      0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.wrong {
+  border-color: $color-red;
+}
+
+.fullName,
+.nickname,
+.password,
+.repeatPassword,
+.phone {
+  &.wrong {
+    &:hover {
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(20%, -80%);
+        padding: 0.5em 0.5em;
+        background-color: $color-background;
+        border-radius: 4px;
+        box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.14),
+          0px 3px 3px rgba(0, 0, 0, 0.12), 0px 1px 8px rgba(0, 0, 0, 0.2);
+        font-size: 0.75em;
+        color: $color-dark-s;
+        z-index: 100;
+        animation-name: hint;
+        animation-duration: 0.5s;
+        animation-timing-function: ease-out;
+        animation-iteration-count: 1;
+      }
+    }
+  }
+}
+
+.fullName.wrong:hover::after {
+  content: "Required field";
+}
+
+.nickname.wrong:hover::after {
+  content: 'Only Latin letters, digits and at least one of the symbols ".", "-", "_"';
+}
+
+.password.wrong:hover::after {
+  content: "Only Latin letters, digits and at least one of special symbol";
+}
+
+.repeatPassword.wrong:hover::after {
+  content: "Passwords must be the same";
+}
+
+.phone.wrong:hover::after {
+  content: "Incorrect phone number format";
+}
+
+@keyframes hint {
+  from {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
