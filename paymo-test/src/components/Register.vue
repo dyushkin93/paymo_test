@@ -1,7 +1,11 @@
 <template>
   <div :class="$style.register">
     <h2>Registration</h2>
-    <form :class="$style.registerForm" @input="handleChange">
+    <form
+      :class="$style.registerForm"
+      @input="handleChange"
+      v-on:submit="handleSubmit"
+    >
       <label :class="[$style.fullName, fullName.showHint ? $style.wrong : '']">
         <span :class="$style.labelText"> Full Name * </span>
         <input
@@ -37,15 +41,15 @@
 
       <label
         :class="[
-          $style.passwordRepeat,
-          passwordRepeat.showHint ? $style.wrong : '',
+          $style.repeatPassword,
+          repeatPassword.showHint ? $style.wrong : '',
         ]"
       >
         <span :class="$style.labelText">Repeat Password *</span>
         <input
-          id="passwordRepeat"
+          id="repeatPassword"
           type="password"
-          v-model="passwordRepeat.value"
+          v-model="repeatPassword.value"
           v-on:blur="handleBlur"
           required
         />
@@ -56,7 +60,7 @@
         <input
           id="phone"
           type="text"
-          :value="phone.number"
+          :value="phone.value"
           v-on:blur="handleBlur"
           required
         />
@@ -82,9 +86,9 @@
 
       <input
         :class="[$style.submit, isFormValid ? $style.submitActive : '']"
+        :disabled="!isFormValid"
         type="submit"
         value="continue"
-        disabled
       />
     </form>
   </div>
@@ -114,25 +118,25 @@ export default {
         isValid: false,
         showHint: false,
       },
-      passwordRepeat: {
+      repeatPassword: {
         value: '',
         isValid: false,
         showHint: false,
       },
       phone: {
-        number: '998 ',
+        value: '998 ',
         isValid: false,
         showHint: false,
       },
       gender: 'none',
       country: '',
       city: '',
-      isFormValid: false,
+      verificationCode: '',
+      registrationId: null,
     };
   },
   methods: {
     handleChange(event) {
-      console.log('asd');
       let { value } = event.target;
       const fieldID = event.target.id;
 
@@ -147,34 +151,26 @@ export default {
 
         case 'phone':
           value = Validators.phoneFormat(value);
-          this.phone = value ? { number: value } : { number: this.phone.number };
-          this.phone.isValid = value.length === 13;
+          this.phone = value ? { value } : { value: this.phone.value };
+          console.log('phone');
+          this.phone.isValid = this.phone.value.length === 13;
           break;
 
         case 'nickname':
           this.nickname.isValid = Validators.nickname(value);
-          console.log(this.nickname.isValid);
           break;
 
         case 'password':
           this.password.isValid = Validators.password(value);
-          this.passwordRepeat.isValid = this.password.value === this.passwordRepeat.value;
-          console.log(this.password.isValid);
+          this.repeatPassword.isValid = this.password.value === this.repeatPassword.value;
           break;
-        case 'passwordRepeat':
-          this.passwordRepeat.isValid = this.password.value === event.target.value;
+        case 'repeatPassword':
+          this.repeatPassword.isValid = this.password.value === event.target.value;
           break;
 
         default:
           break;
       }
-
-      this.isFormValid =
-        this.passwordRepeat.isValid &&
-        this.password.isValid &&
-        this.nickname.isValid &&
-        this.fullName.isValid &&
-        this.phone.isValid;
     },
 
     handleBlur(event) {
@@ -182,9 +178,57 @@ export default {
       if (data.showHint !== undefined) {
         data.showHint = !data.isValid;
         if (event.target.id === 'password') {
-          this.passwordRepeat.showHint = !this.passwordRepeat.isValid;
+          this.repeatPassword.showHint = !this.repeatPassword.isValid;
         }
       }
+    },
+
+    handleSubmit(event) {
+      event.preventDefault();
+      const URL = 'http://test.ok.paymo.uz/public/user/register';
+      console.log(this.fullName.value);
+
+      const body = {
+        fullName: this.fullName.value,
+        nickname: this.nickname.value,
+        password: this.password.value,
+        repeatPassword: this.repeatPassword.value,
+        phone: this.phone.value.split(' ').join(''),
+        gender: this.gender.toUpperCase(),
+        country: this.country.toUpperCase(),
+        city: this.city.toUpperCase(),
+      };
+
+      console.log(JSON.stringify(body));
+
+      const config = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      };
+
+      fetch(URL, config)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+
+  computed: {
+    isFormValid() {
+      return (
+        this.repeatPassword.isValid &&
+        this.password.isValid &&
+        this.nickname.isValid &&
+        this.fullName.isValid &&
+        this.phone.isValid
+      );
     },
   },
 };
@@ -281,6 +325,6 @@ input {
 }
 
 .wrong {
-  border-color: red;
+  border-color: $color-red;
 }
 </style>

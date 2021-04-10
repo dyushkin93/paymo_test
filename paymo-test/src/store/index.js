@@ -12,7 +12,11 @@ const store = new Vuex.Store({
   getters: {
     FULL_NAME: (state) => state.user.fullName,
   },
-  mutations: {},
+  mutations: {
+    SET_USER: (state, payload) => {
+      state.user = payload;
+    },
+  },
   actions: {},
 });
 

@@ -15,12 +15,12 @@ export function phoneFormat(value) {
 }
 
 export function nickname(value) {
-  // 5 and more alfanumeric characters and symbols: "-", "."
-  return /^[\w\-.]{5,}$/g.test(value);
+  // 5 and more alfanumeric characters and at leat one of the symbols: "-", "."
+  return /(?=.*[_\-.])[\w\-.]{5,}/g.test(value);
 }
 
 export function password(value) {
   // 8 and more alfanumeric characters
-  // and symbols: "-", ".", "+", "=", "@", "$", "!", "?"
-  return /^[\w\-.+=@$!?]{8,}$/g.test(value);
+  // and at leat one of the symbols: "-", ".", "+", "=", "@", "$", "!", "?"
+  return /(?=.*[_\-.+=@$!?])[\w\-.+=@$!?]{8,}/g.test(value);
 }
