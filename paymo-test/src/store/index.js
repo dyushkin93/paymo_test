@@ -7,10 +7,12 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     user: {
+      id: null,
       fullName: 'guest',
     },
   },
   getters: {
+    ID: (state) => state.user.id,
     FULL_NAME: (state) => state.user.fullName,
   },
   mutations: {

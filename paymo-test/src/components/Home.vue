@@ -1,13 +1,23 @@
 <template>
   <div :class="$style.home">
-    <h2>Hello, {{ this.$store.getters.FULL_NAME }}!</h2>
-    <router-link :class="$style.link" to="register"> Registration </router-link>
+    <h2>Hello, {{ user.fullName }}!</h2>
+    <router-link v-if="!user.id" :class="$style.link" to="register">
+      Registration
+    </router-link>
   </div>
 </template>
 
 <script>
 export default {
   name: 'home',
+  data() {
+    return {
+      user: {
+        id: this.$store.getters.ID,
+        fullName: this.$store.getters.FULL_NAME,
+      },
+    };
+  },
 };
 </script>
 
