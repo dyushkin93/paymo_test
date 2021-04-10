@@ -210,9 +210,17 @@ export default {
       };
 
       fetch(URL, config)
-        .then((res) => res.json())
+        .then((res) => {
+          let data;
+          if (res.status >= 200 && res.status < 300) {
+            data = res.json();
+          } else {
+            throw new Error('Error on the server side');
+          }
+          return data;
+        })
         .then((data) => {
-          console.log(data);
+          this.registrationId = data.registrationId;
         })
         .catch((error) => {
           console.log(error);
@@ -326,5 +334,70 @@ input {
 
 .wrong {
   border-color: $color-red;
+}
+
+.fullName,
+.nickname,
+.password,
+.repeatPassword,
+.phone {
+  &.wrong {
+    &:hover {
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(20%, -80%);
+        padding: 0.5em 0.5em;
+        background-color: $color-background;
+        border-radius: 4px;
+        box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.14),
+          0px 3px 3px rgba(0, 0, 0, 0.12), 0px 1px 8px rgba(0, 0, 0, 0.2);
+        font-size: 0.75em;
+        color: $color-dark-s;
+        z-index: 100;
+        animation-name: hint;
+        animation-duration: 0.5s;
+        animation-timing-function: ease-out;
+        animation-iteration-count: 1;
+      }
+    }
+  }
+}
+
+.fullName.wrong:hover::after {
+  content: "Required field";
+}
+
+.nickname.wrong:hover::after {
+  content: 'Only Latin letters, digits and at least one of the symbols ".", "-", "_"';
+}
+
+.password.wrong:hover::after {
+  content: "Only Latin letters, digits and at least one of special symbol";
+}
+
+.repeatPassword.wrong:hover::after {
+  content: "Passwords must be the same";
+}
+
+.phone.wrong:hover::after {
+  content: "Incorrect phone number format";
+}
+
+@keyframes hint {
+  from {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 </style>
