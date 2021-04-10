@@ -1,4 +1,5 @@
 import CONSTANTS from '../../constants';
+import router from '../../router';
 
 export default function handleSubmit(event) {
   event.preventDefault();
@@ -24,19 +25,11 @@ export default function handleSubmit(event) {
   };
 
   fetch(URL, config)
-    .then((res) => {
-      let data;
-      if (res.status >= 200 && res.status < 300) {
-        data = res.json();
-      } else {
-        throw new Error('Error on the server side');
-      }
-      return data;
-    })
+    .then((res) => res.json())
     .then((data) => {
       this.registrationId = data.registrationId;
     })
     .catch(() => {
-      this.$route.push('/');
+      router.push('/error');
     });
 }
